@@ -4,7 +4,7 @@ export const getToken = () => localStorage.getItem(TOKEN_KEY);
 
 export const signin = async token => {
   await localStorage.setItem(TOKEN_KEY, token);
-  window.location.href = "/";
+  window.location = "/";
 };
 export const logout = async () => {
   await localStorage.removeItem(TOKEN_KEY);
