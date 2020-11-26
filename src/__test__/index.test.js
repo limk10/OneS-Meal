@@ -3,7 +3,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { render, waitFor, fireEvent } from "@testing-library/react";
-
+import { getToken } from "~/services/auth";
 import store from "~/store";
 import App from "~/App";
 
@@ -14,95 +14,54 @@ const renderWithRouter = (ui, { route = "/" } = {}) => {
   return render(ui, { wrapper: BrowserRouter });
 };
 
-test("full app rendering/navigating", () => {
-  const { getByText } = renderWithRouter(<App />);
-  expect(getByText(/Pagina não encontrada/i)).toBeInTheDocument();
+test("signin app rendering/navigating", async () => {
+  const { getByText, getByTestId } = renderWithRouter(<App />);
+  expect(getByText(/ENTRAR/i)).toBeInTheDocument();
+
+  const btnSubmit = await waitFor(() => getByTestId("submitSignIn"));
+
+  fireEvent.click(btnSubmit);
 });
 
-test("list of transactions", async () => {
+test("home page", async () => {
+  const { getByText } = renderWithRouter(
+    <Provider store={store()}>
+      <App />
+    </Provider>,
+    { route: "/" }
+  );
+
+  expect(getByText(/Um breve resumo do que foi usado/i)).toBeInTheDocument();
+});
+
+test("list of recipes", async () => {
+  const { getByText, getAllByTestId } = renderWithRouter(
+    <Provider store={store()}>
+      <App />
+    </Provider>,
+    { route: "/recipes" }
+  );
+
+  expect(getByText(/Receitas/i)).toBeInTheDocument();
+
+  const btnSubmit = await waitFor(() => getAllByTestId("menuButton"));
+  expect(btnSubmit[0]).toBeDefined();
+  fireEvent.click(btnSubmit[0]);
+
+  const cardList = await waitFor(() => getAllByTestId("listCardRecipes"));
+  expect(cardList[0]).toBeDefined();
+
+  fireEvent.click(btnSubmit[0]);
+});
+
+test("detailt of recipes", async () => {
   const { getByTestId } = renderWithRouter(
     <Provider store={store()}>
       <App />
     </Provider>,
-    { route: "/transaction" }
+    { route: "/recipes/details" }
   );
 
-  const cardList = await waitFor(() => getByTestId("card-list"));
-  expect(cardList).toBeDefined();
-});
-
-test("create new transaction", async () => {
-  const { getByTestId, getByText } = renderWithRouter(
-    <Provider store={store()}>
-      <App />
-    </Provider>,
-    { route: "/transaction/create" }
-  );
-
-  const dataForm = {
-    nameCustomer: "Matheus Lopes",
-    document: "056.042.411-64",
-    cardNumber: "4111 1111 1111 1111",
-    expirationDate: "01/29",
-    cvv: "1423",
-    amount: "R$ 500"
-  };
-
-  const fieldCustomerName = await waitFor(() => getByTestId("customerName"));
-  const fieldDocument = await waitFor(() => getByTestId("document"));
-  const fieldCardNumber = await waitFor(() => getByTestId("cardNumber"));
-  const fieldExpirationDate = await waitFor(() =>
-    getByTestId("expirationDate")
-  );
-  const fieldCVV = await waitFor(() => getByTestId("cvv"));
-  const fieldAmount = await waitFor(() => getByTestId("amount"));
-
-  fireEvent.change(fieldCustomerName, {
-    target: {
-      value: dataForm.nameCustomer
-    }
-  });
-
-  fireEvent.change(fieldDocument, {
-    target: {
-      value: dataForm.document
-    }
-  });
-
-  fireEvent.change(fieldCardNumber, {
-    target: {
-      value: dataForm.cardNumber
-    }
-  });
-
-  fireEvent.change(fieldExpirationDate, {
-    target: {
-      value: dataForm.expirationDate
-    }
-  });
-
-  fireEvent.change(fieldCVV, {
-    target: {
-      value: dataForm.cvv
-    }
-  });
-
-  fireEvent.change(fieldAmount, {
-    target: {
-      value: dataForm.amount
-    }
-  });
-
-  expect(fieldCustomerName.value).toBe(dataForm.nameCustomer);
-  expect(fieldDocument.value).toBe(dataForm.document);
-  expect(fieldCardNumber.value).toBe(dataForm.cardNumber);
-  expect(fieldExpirationDate.value).toBe(dataForm.expirationDate);
-  expect(fieldCVV.value).toBe(dataForm.cvv);
-  expect(fieldAmount.value).toBe(dataForm.amount);
-
-  const btnSubmit = await waitFor(() => getByTestId("submitTransactionButton"));
-
-  fireEvent.click(btnSubmit);
-
-  await waitFor(() => getByText(dataForm.nameCustomer));
+  const boxDetails = await waitFor(() => getByTestId("boxRecipeDetails"));
+  expect(boxDetails).toBeDefined();
 });
