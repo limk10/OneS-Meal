@@ -6,12 +6,14 @@ import {
   Button,
   Container,
   Box,
-  Tooltip
+  Grid
 } from "@material-ui/core";
 import { useStyles } from "./styles";
 import { logout } from "~/services/auth";
 import api from "~/services/api";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+
 import actionsCategories from "~/actions/categories";
 import actionsRecipes from "~/actions/recipes";
 import actionsLoading from "~/actions/loading";
@@ -19,6 +21,7 @@ import actionsLoading from "~/actions/loading";
 const Header = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const history = useHistory();
 
   const { data: categories } = useSelector(state => state.reducerCategories);
 
@@ -41,6 +44,7 @@ const Header = () => {
 
   const getRecipes = async strCategory => {
     try {
+      history.push("/recipes");
       dispatch(actionsLoading.requestLoading(true));
       const { data } = await api.get(`filter.php?c=${strCategory}`);
       const { meals } = data;
@@ -66,26 +70,33 @@ const Header = () => {
               root: classes.toolbar
             }}
           >
-            <Typography variant="h6" className={classes.title}>
+            <Typography
+              onClick={() => history.push("/")}
+              variant="h6"
+              className={classes.title}
+            >
               OneS Meal
             </Typography>
             <Button onClick={() => logout()} color="inherit">
-              Logout
+              Sair
             </Button>
           </Toolbar>
         </Container>
       </AppBar>
-      <Box display="flex" justifyContent="center">
+      <Grid justify="center" container>
         {categories?.map(
           ({ idCategory, strCategory, strCategoryDescription }) => (
-            <Fragment key={idCategory}>
-              <Button onClick={() => getRecipes(strCategory)}>
+            <Grid item key={idCategory}>
+              <Button
+                data-testid="menuButton"
+                onClick={() => getRecipes(strCategory)}
+              >
                 {strCategory}
               </Button>
-            </Fragment>
+            </Grid>
           )
         )}
-      </Box>
+      </Grid>
     </>
   );
 };
