@@ -2,9 +2,11 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { isAuthenticated } from "~/services/auth";
 
+import Home from "~/screens/Home";
+import RecipeList from "~/screens/Recipe/List";
+import RecipeDetails from "~/screens/Recipe/Details";
 import NotFound from "~/screens/NotFound";
 import SignIn from "~/screens/Auth/SignIn";
-import RecipeList from "~/screens/Recipe/List";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
@@ -26,7 +28,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 const Routes = () => {
   return (
     <Switch>
-      <PrivateRoute exact path="/" component={RecipeList} />
+      <PrivateRoute exact path="/" component={Home} />
+      <PrivateRoute exact path="/recipes" component={RecipeList} />
+      <PrivateRoute exact path="/recipes/details" component={RecipeDetails} />
       <Route exact path="/signin" component={SignIn} />
       <Route path="*" component={NotFound} />
     </Switch>
