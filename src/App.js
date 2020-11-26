@@ -31,12 +31,13 @@ const App = () => {
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <Header />
-        <Container maxWidth="lg">
-          <GlobalStyle />
-          <Routes />
-        </Container>
+        <div style={{ paddingBottom: 50, backgroundColor: "#f5f5f5" }}>
+          <Container style={{ backgrondColor: "red" }} maxWidth="lg">
+            <GlobalStyle />
+            <Routes />
+          </Container>
+        </div>
       </ThemeProvider>
-      <Toolbar />
     </BrowserRouter>
   );
 };
