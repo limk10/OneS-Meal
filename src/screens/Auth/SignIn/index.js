@@ -118,6 +118,7 @@ const SignIn = () => {
 
                 <div className={classes.wrapper}>
                   <Button
+                    data-testid="submitSignIn"
                     type="submit"
                     onClick={e => login(e)}
                     className={classes.paddingTop1_5}
