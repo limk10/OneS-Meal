@@ -14,7 +14,13 @@ const useStyles = makeStyles(theme => ({
     maxWidth: `20ch`,
     overflow: `hidden`,
     textOverflow: `ellipsis`,
-    whiteSpace: `nowrap`
+    whiteSpace: `nowrap`,
+    marginBottom: 0
+  },
+  borderPrimaryBottom: {
+    borderBottom: `2px solid ${theme.palette.primary.main}`,
+    width: `80%`,
+    marginBottom: theme.spacing(2)
   }
 }));
 
