@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, Box } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
 const NotFound = () => {
@@ -11,7 +11,7 @@ const NotFound = () => {
   }, []);
 
   return (
-    <>
+    <Box pt={5}>
       <Typography
         style={{ textAlign: "center", paddingTop: 50 }}
         variant="h5"
@@ -26,7 +26,7 @@ const NotFound = () => {
       >
         Você será redirecionado para pagina principal em alguns segundos!
       </Typography>
-    </>
+    </Box>
   );
 };
 
