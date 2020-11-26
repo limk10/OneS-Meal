@@ -2,7 +2,9 @@ const actions = {
   REQUEST_LOADING: "REQUEST_LOADING",
 
   CATEGORIES: "CATEGORIES",
-  MEALS: "MEALS"
+
+  RECPIE_BY_ID: "RECPIE_BY_ID",
+  RECPIES: "RECPIES"
 };
 
 export default actions;
